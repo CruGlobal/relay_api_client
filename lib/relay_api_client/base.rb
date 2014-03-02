@@ -25,11 +25,11 @@ module RelayApiClient
           end
         end
       rescue => e
-        if e.message == "(S:Client) user already exists"
+        if e.message.include?("user already exists")
           # check identity linking
           if RelayApiClient.linker_username &&
              RelayApiClient.linker_password &&
-             l = IdentityLinker::Linker.find_linked_identity('username',username,'ssoguid')
+             l = IdentityLinker::Linker.find_linked_identity('relay_username',username,'ssoguid')
             return l[:identity][:id_value]
           end
         else
