@@ -5,7 +5,11 @@ module RelayApiClient
       @client ||= Savon.client(wsdl: RelayApiClient.wsdl)
     end
 
-    # returns a guid or nil
+    # @param [String] username
+    # @param [String] password
+    # @param [String] first_name
+    # @param [String] last_name
+    # @return [String] Returns the guid of the new account
     def self.create_account(username, password, first_name, last_name)
       password = password.gsub('&', '&amp;').gsub('<', '&lt;').gsub('>','&gt;').gsub("'", "&apos;").gsub("\"", "&quot;")
       begin
@@ -28,17 +32,23 @@ module RelayApiClient
         if e.message.include?("user already exists")
           # check identity linking
           if RelayApiClient.linker_username &&
-             RelayApiClient.linker_password &&
-             l = IdentityLinker::Linker.find_linked_identity('relay_username',username,'ssoguid')
+            RelayApiClient.linker_password &&
+            l = IdentityLinker::Linker.find_linked_identity('relay_username', username, 'ssoguid')
             return l[:identity][:id_value]
           end
         else
           raise
         end
       end
-
-      nil
     end
 
+    # @param [String] ssoguid
+    # @param [String] designation
+    # @return [Boolean] true if it succeeded, false otherwise.
+    def self.set_designation_number(ssoguid, designation)
+      response = client.call(:set_designation, message: {ssoguid: ssoguid, designation: designation})
+
+      response.success?
+    end
   end
 end
