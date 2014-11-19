@@ -8,7 +8,7 @@ module RelayApiClient
     def configure
       yield self
 
-      self.wsdl ||= 'https://signin.ccci.org/sso/selfservice/webservice/5.0?wsdl'
+      self.wsdl ||= 'https://signin.cru.org/sso/selfservice/webservice/5.0?wsdl'
 
       if linker_username && linker_password
         IdentityLinker.configure do |c|
