@@ -2,7 +2,7 @@ module RelayApiClient
   class Base
 
     def self.client
-      @client ||= Savon.client(wsdl: RelayApiClient.wsdl)
+      @client ||= Savon.client(wsdl: RelayApiClient.wsdl, ssl_verify_mode: :none)
     end
 
     # @param [String] username
@@ -42,11 +42,19 @@ module RelayApiClient
       end
     end
 
-    # @param [String] ssoguid
-    # @param [String] designation
+    # @param ssoguid [String]
+    # @param designation [String]
     # @return [Boolean] true if it succeeded, false otherwise.
     def self.set_designation_number(ssoguid, designation)
       response = client.call(:set_designation, message: {ssoguid: ssoguid, designation: designation})
+
+      response.success?
+    end
+
+    # @param args [Hash] arguments to pass on to SOAP call
+    # @return [Boolean] true if it succeeded, false otherwise.
+    def self.set_role(args)
+      response = client.call(:set_role, message: args)
 
       response.success?
     end
