@@ -57,6 +57,9 @@ module RelayApiClient
       response = client.call(:set_role, message: args)
 
       response.success?
+    rescue Savon::SOAPFault => e
+      return true if e.message.include?('duplicate')
+      false
     end
   end
 end
