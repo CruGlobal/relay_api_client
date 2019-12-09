@@ -1,6 +1,6 @@
 # RelayApiClient
 
-TODO: Write a gem description
+Note that the global_registry gem is required. In order to create Key/Relay accounts, your app's GR API system either needs to be root or trusted by the_key
 
 ## Installation
 

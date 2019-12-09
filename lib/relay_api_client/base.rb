@@ -31,11 +31,13 @@ module RelayApiClient
       rescue => e
         if e.message.include?("user already exists")
           # check identity linking
-          if RelayApiClient.linker_username &&
-            RelayApiClient.linker_password &&
-            l = IdentityLinker::Linker.find_linked_identity('relay_username', username, 'ssoguid')
-            return l[:identity][:id_value]
-          end
+          person_entity = GlobalRegistry::Entity.get(
+            'entity_type' => 'person',
+            'filters[key_username]' => username,
+            'filters[owned_by]' => 'the_key'
+          )
+          guid = person_entity&.dig('entities', 0, 'person', 'authentication', 'key_guid')
+          return guid
         else
           raise
         end
