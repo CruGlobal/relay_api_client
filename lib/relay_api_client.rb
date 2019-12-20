@@ -1,5 +1,4 @@
 require 'savon'
-require 'identity_linker'
 
 module RelayApiClient
   class << self
